@@ -35,3 +35,15 @@ class PhoneInput(BaseModel):
 class PredictionResponse(BaseModel):
     predicted_resale_price_inr: float
     currency: Literal["INR"] = "INR"
+
+class EvaluationInput(PhoneInput):
+    asking_price_inr: float = Field(..., gt=0, allow_inf_nan=False)
+
+
+class EvaluationResponse(BaseModel):
+    predicted_resale_price_inr: float
+    asking_price_inr: float
+    difference_inr: float
+    difference_pct: float
+    recommendation: Literal["BUY", "NEGOTIATE", "PASS"]
+    currency: Literal["INR"] = "INR"

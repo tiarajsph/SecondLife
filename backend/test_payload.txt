@@ -16,3 +16,5 @@
   "city": "Pune",
   "seller_type": "Individual"
 }
+
+iZvVEKzmT4qG0WLQ : db password
