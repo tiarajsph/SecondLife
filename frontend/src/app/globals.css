@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens. Use as: bg-ink, bg-surface, border-line, text-brand ...
+   NOTE: do NOT add an unlayered `* { margin:0; padding:0 }` reset here.
+   Tailwind v4 puts utilities in a cascade layer, and unlayered CSS beats
+   layered CSS, so such a reset silently deletes every p-*, m-*, gap-*.
+   Tailwind's preflight already handles the reset.
+------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #080d0a;
+  --color-surface: #0d150f;
+  --color-raised: #121d16;
+  --color-line: #1e2e23;
+  --color-line-strong: #2a4032;
+
+  --color-brand: #22c55e;
+  --color-brand-soft: #86efac;
+  --color-muted: #a1a1aa;
+
+  --color-warn: #f59e0b;
+  --color-warn-soft: #fcd34d;
+  --color-danger: #ef4444;
+  --color-danger-soft: #fca5a5;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* clear the fixed navbar on anchor jumps */
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    background-image: radial-gradient(
+      60rem 28rem at 50% -8rem,
+      rgb(34 197 94 / 0.09),
+      transparent 70%
+    );
+    background-repeat: no-repeat;
+    color: #f5f5f5;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "tnum" 0;
+  }
+
+  ::selection {
+    background: rgb(34 197 94 / 0.35);
+  }
+
+  /* Visible keyboard focus everywhere, no ugly white box on mouse click */
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand);
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  /* Shared text-input look */
+  .ctl {
+    @apply h-12 w-full rounded-xl border border-line bg-ink px-4 text-sm text-white
+      placeholder:text-muted/50 transition-colors hover:border-brand/40
+      focus:border-brand focus:ring-2 focus:ring-brand/20;
+  }
+  .ctl[aria-invalid="true"] {
+    @apply border-danger/60 focus:border-danger focus:ring-danger/20;
+  }
+
+  /* Battery slider */
+  .range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--color-brand) var(--fill, 0%),
+      var(--color-line) var(--fill, 0%)
+    );
+    cursor: pointer;
+  }
+  .range.is-empty {
+    background: var(--color-line);
+  }
+  .range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: var(--color-brand);
+    border: 4px solid var(--color-ink);
+    box-shadow: 0 0 0 1px var(--color-brand), 0 0 14px rgb(34 197 94 / 0.45);
+  }
+  .range.is-empty::-webkit-slider-thumb {
+    background: var(--color-line-strong);
+    box-shadow: 0 0 0 1px var(--color-line-strong);
+  }
+  .range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--color-brand);
+    border: 4px solid var(--color-ink);
+    box-shadow: 0 0 0 1px var(--color-brand);
+  }
+}
+
+/* One deliberate entrance: the result card */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
